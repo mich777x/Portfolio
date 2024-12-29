@@ -1,62 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 export const Navigation = ({ activeSection }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [isScrolled, setIsScrolled] = useState(false);
 
-	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 50);
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
-
-	const navItems = [
+	const navLinks = [
 		{ href: "#home", label: "Home" },
 		{ href: "#projects", label: "Projects" },
 		{ href: "#skills", label: "Skills" },
 		{ href: "#contact", label: "Contact" },
 	];
 
+	const NavLink = ({ href, active, children, onClick }) => (
+		<a href={href} onClick={onClick} className={`text-sm font-medium transition-colors duration-200 ${active ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}>
+			{children}
+		</a>
+	);
+
 	return (
-		<nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-lg py-4" : "bg-transparent py-6"}`}>
+		<nav className={`fixed w-full z-50 transition-all duration-300 ${isMenuOpen ? "bg-white" : "bg-white/90 backdrop-blur-sm"} shadow-md py-4`}>
 			<div className="container mx-auto px-6">
-				<div className="flex items-center justify-between">
-					<a href="#home" className={`text-2xl font-bold transition-colors duration-300 ${isScrolled ? "text-gray-900" : "text-white"}`}>
+				<div className="flex justify-between items-center">
+					{/* Logo */}
+					<a href="#home" className="text-2xl font-bold text-gray-900">
 						Portfolio
 					</a>
 
 					{/* Desktop Navigation */}
 					<div className="hidden md:flex space-x-8">
-						{navItems.map((item) => (
-							<a key={item.href} href={item.href} className={`text-sm font-medium transition-all duration-300 ${isScrolled ? (activeSection === item.href.slice(1) ? "text-blue-600" : "text-gray-600 hover:text-blue-600") : activeSection === item.href.slice(1) ? "text-blue-400" : "text-white hover:text-blue-400"}`}>
-								{item.label}
-							</a>
+						{navLinks.map(({ href, label }) => (
+							<NavLink key={href} href={href} active={activeSection === href.slice(1)}>
+								{label}
+							</NavLink>
 						))}
 					</div>
 
 					{/* Mobile Menu Button */}
-					<button className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${isScrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/10"}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-						{isMenuOpen ? <X /> : <Menu />}
+					<button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors" aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}>
+						{isMenuOpen ? <X size={24} /> : <Menu size={24} />}
 					</button>
 				</div>
 
 				{/* Mobile Navigation */}
 				{isMenuOpen && (
-					<div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg rounded-b-lg">
-						<div className="px-6 py-4 space-y-4">
-							{navItems.map((item) => (
-								<a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className={`block text-base transition-colors duration-300 ${activeSection === item.href.slice(1) ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}>
-									{item.label}
-								</a>
+					<div className="md:hidden">
+						<div className="py-4 space-y-4">
+							{navLinks.map(({ href, label }) => (
+								<div key={href} className="px-2">
+									<NavLink href={href} active={activeSection === href.slice(1)} onClick={() => setIsMenuOpen(false)}>
+										{label}
+									</NavLink>
+								</div>
 							))}
 						</div>
 					</div>
 				)}
 			</div>
+
+			{/* Overlay for mobile menu */}
+			{isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 md:hidden -z-10" onClick={() => setIsMenuOpen(false)} />}
 		</nav>
 	);
 };

@@ -5,43 +5,80 @@ import { Skills } from "./components/Skills/Skills";
 import { Contact } from "./components/Contact/Contact";
 import { Footer } from "./components/Footer/Footer";
 import { Navigation } from "./components/Navigation/Navigation";
-import { Loader2 } from "lucide-react";
+
+// Data
+const personalInfo = {
+	name: "Nahom Michael",
+	title: "Frontend Developer",
+	email: "mnahom832@gmail.com",
+	location: "Maryland, USA",
+	profileImage: "/api/placeholder/300/300",
+	github: "https://github.com/mich777x",
+	linkedin: "https://www.linkedin.com/in/nahom-m-5944462a2/?trk=opento_sprofile_topcard",
+};
+
+const projects = [
+	{
+		title: "E-Commerce Platform",
+		description: "A comprehensive e-commerce solution built with React and modern web technologies.",
+		tags: ["React", "Tailwind CSS", "JavaScript"],
+		image: "/api/placeholder/400/300",
+		github: "https://github.com/mich777x/ecommerce.git",
+		liveDemo: "https://ecommerce-lyart-delta-28.vercel.app/",
+	},
+	{
+		title: "Task Management App",
+		description: "Front-End Task Management App with React",
+		tags: ["React", "Tailwind CSS", "JavaScript"],
+		image: "/api/placeholder/400/300",
+		github: "https://github.com/mich777x/task-management.git",
+		liveDemo: "https://task-management-red-one.vercel.app/",
+	},
+	{
+		title: "Blog Website",
+		description: "Front-End Blog website with React and Tailwind CSS.",
+		tags: ["React", "Tailwind CSS", "JavaScript"],
+		image: "/api/placeholder/400/300",
+		github: "https://github.com/mich777x/Blog.git",
+		liveDemo: "https://blog-zeta-three-68.vercel.app/",
+	},
+];
+
+const skills = [
+	{
+		name: "Frontend Development",
+		items: ["React", "HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Responsive Design"],
+	},
+	{
+		name: "Tools & Methods",
+		items: ["Git", "VS Code", "Chrome DevTools", "Command Line", "Agile/Scrum"],
+	},
+	{
+		name: "Soft Skills",
+		items: ["Problem Solving", "Team Collaboration", "Communication", "Time Management"],
+	},
+];
 
 const App = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeSection, setActiveSection] = useState("home");
 
-	// Sample data
-	const personalInfo = {
-		name: "Nahom Michael",
-		title: "FrontEnd Developer",
-		email: "mnahom832@gmail.com",
-		location: "Maryland, USA",
-		bio: "Passionate developer creating amazing web experiences",
-		profileImage: "/api/placeholder/128/128",
-	};
-
-	const skills = [{ name: "React" }, { name: "TailwindCSS" }, { name: "Html" }, { name: "JavaScript" }];
-
 	useEffect(() => {
-		setTimeout(() => setIsLoading(false), 2000);
-	}, []);
+		setTimeout(() => setIsLoading(false), 1500);
 
-	useEffect(() => {
 		const handleScroll = () => {
-			const sections = ["home", "projects", "skills", "contact"];
-			const scrollPosition = window.scrollY + window.innerHeight / 2;
+			const sections = document.querySelectorAll("section[id]");
+			const scrollPosition = window.scrollY + 100;
 
-			for (const section of sections) {
-				const element = document.getElementById(section);
-				if (element) {
-					const { offsetTop, offsetHeight } = element;
-					if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-						setActiveSection(section);
-						break;
-					}
+			sections.forEach((section) => {
+				const top = section.offsetTop;
+				const height = section.offsetHeight;
+				const id = section.getAttribute("id");
+
+				if (scrollPosition >= top && scrollPosition < top + height) {
+					setActiveSection(id);
 				}
-			}
+			});
 		};
 
 		window.addEventListener("scroll", handleScroll);
@@ -50,32 +87,41 @@ const App = () => {
 
 	if (isLoading) {
 		return (
-			<div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-blue-900 flex items-center justify-center">
-				<div className="text-center">
-					<Loader2 className="w-16 h-16 text-blue-500 animate-spin mx-auto mb-4" />
-					<div className="text-white text-2xl font-light">Loading amazing things...</div>
+			<div className="fixed inset-0 bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center justify-center">
+				<div className="relative">
+					<div className="w-16 h-16">
+						<div className="absolute w-full h-full border-4 border-blue-500 rounded-full animate-[ping_1s_ease-in-out_infinite]" />
+						<div className="absolute w-full h-full border-4 border-blue-500 rounded-full animate-[ping_1s_ease-in-out_infinite_0.3s]" />
+						<div className="absolute w-full h-full border-4 border-blue-500 rounded-full" />
+					</div>
 				</div>
+				<div className="mt-8 text-white text-lg font-medium animate-pulse">Welcome</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pdf-ready">
+		<div className="min-h-screen bg-gray-50">
 			<Navigation activeSection={activeSection} />
+
 			<main>
 				<section id="home" className="min-h-screen">
 					<Hero personalInfo={personalInfo} />
 				</section>
-				<section id="projects" className="min-h-screen py-20">
-					<Projects />
+
+				<section id="projects" className="py-20">
+					<Projects projects={projects} />
 				</section>
-				<section id="skills" className="min-h-screen py-20">
+
+				<section id="skills" className="py-20 bg-gray-50">
 					<Skills skills={skills} />
 				</section>
-				<section id="contact" className="min-h-screen py-20">
+
+				<section id="contact" className="py-20">
 					<Contact personalInfo={personalInfo} />
 				</section>
 			</main>
+
 			<Footer personalInfo={personalInfo} />
 		</div>
 	);
