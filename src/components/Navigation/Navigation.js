@@ -12,17 +12,17 @@ export const Navigation = ({ activeSection }) => {
 	];
 
 	const NavLink = ({ href, active, children, onClick }) => (
-		<a href={href} onClick={onClick} className={`text-sm font-medium transition-colors duration-200 ${active ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}>
+		<a href={href} onClick={onClick} className={`text-sm font-medium transition-colors duration-200 ${active ? "text-blue-400" : "text-gray-300 hover:text-blue-400"}`}>
 			{children}
 		</a>
 	);
 
 	return (
-		<nav className={`fixed w-full z-50 transition-all duration-300 ${isMenuOpen ? "bg-white" : "bg-white/90 backdrop-blur-sm"} shadow-md py-4`}>
+		<nav className={`fixed w-full z-50 transition-all duration-300 ${isMenuOpen ? "bg-gray-900" : "bg-gray-900/95 backdrop-blur-sm"} shadow-lg py-4`}>
 			<div className="container mx-auto px-6">
 				<div className="flex justify-between items-center">
 					{/* Logo */}
-					<a href="#home" className="text-2xl font-bold text-gray-900">
+					<a href="#home" className="text-2xl font-bold text-white">
 						Portfolio
 					</a>
 
@@ -36,7 +36,7 @@ export const Navigation = ({ activeSection }) => {
 					</div>
 
 					{/* Mobile Menu Button */}
-					<button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors" aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}>
+					<button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-gray-300 hover:text-white transition-colors" aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}>
 						{isMenuOpen ? <X size={24} /> : <Menu size={24} />}
 					</button>
 				</div>
@@ -44,7 +44,7 @@ export const Navigation = ({ activeSection }) => {
 				{/* Mobile Navigation */}
 				{isMenuOpen && (
 					<div className="md:hidden">
-						<div className="py-4 space-y-4">
+						<div className="py-4 space-y-4 border-t border-gray-800 mt-4">
 							{navLinks.map(({ href, label }) => (
 								<div key={href} className="px-2">
 									<NavLink href={href} active={activeSection === href.slice(1)} onClick={() => setIsMenuOpen(false)}>

@@ -46,16 +46,13 @@ const projects = [
 
 const skills = [
 	{
-		name: "Frontend Development",
-		items: ["React", "HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Responsive Design"],
+		name: "React",
 	},
 	{
-		name: "Tools & Methods",
-		items: ["Git", "VS Code", "Chrome DevTools", "Command Line", "Agile/Scrum"],
+		name: "TailwindCSS",
 	},
 	{
-		name: "Soft Skills",
-		items: ["Problem Solving", "Team Collaboration", "Communication", "Time Management"],
+		name: "JavaScript",
 	},
 ];
 
