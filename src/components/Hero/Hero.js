@@ -7,7 +7,7 @@ export const Hero = ({ personalInfo }) => {
 	const [roleIndex, setRoleIndex] = useState(0);
 	const [isTyping, setIsTyping] = useState(true);
 
-	const roles = React.useMemo(() => ["Frontend Developer", "React Specialist", "UI/UX Enthusiast"], []);
+	const roles = React.useMemo(() => ["Frontend Developer", "UI/UX Enthusiast"], []);
 
 	const handleTyping = useCallback(() => {
 		const role = roles[roleIndex];
