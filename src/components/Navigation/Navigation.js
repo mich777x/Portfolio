@@ -1,61 +1,62 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "./NavLink";
-import { MobileNavLink } from "./MobileNavLink";
-import { useScrollPosition } from "../../hooks/useScrollPosition";
 
 export const Navigation = ({ activeSection }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const scrollPosition = useScrollPosition();
+	const [isScrolled, setIsScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			setIsScrolled(window.scrollY > 50);
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
+	const navItems = [
+		{ href: "#home", label: "Home" },
+		{ href: "#projects", label: "Projects" },
+		{ href: "#skills", label: "Skills" },
+		{ href: "#contact", label: "Contact" },
+	];
 
 	return (
-		<nav className={`fixed w-full z-50 transition-all duration-300 ${scrollPosition > 50 ? "bg-white shadow-md py-4" : "bg-transparent py-6"}`}>
-			{/* Navigation content */}
+		<nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-lg py-4" : "bg-transparent py-6"}`}>
 			<div className="container mx-auto px-6">
-				<div className="flex justify-between items-center">
-					<a href="#" className="text-2xl font-bold text-gray-800">
+				<div className="flex items-center justify-between">
+					<a href="#home" className={`text-2xl font-bold transition-colors duration-300 ${isScrolled ? "text-gray-900" : "text-white"}`}>
 						Portfolio
 					</a>
 
+					{/* Desktop Navigation */}
 					<div className="hidden md:flex space-x-8">
-						<NavLink href="#home" active={activeSection === "home"}>
-							Home
-						</NavLink>
-						<NavLink href="#projects" active={activeSection === "projects"}>
-							Projects
-						</NavLink>
-						<NavLink href="#skills" active={activeSection === "skills"}>
-							Skills
-						</NavLink>
-						<NavLink href="#contact" active={activeSection === "contact"}>
-							Contact
-						</NavLink>
+						{navItems.map((item) => (
+							<a key={item.href} href={item.href} className={`text-sm font-medium transition-all duration-300 ${isScrolled ? (activeSection === item.href.slice(1) ? "text-blue-600" : "text-gray-600 hover:text-blue-600") : activeSection === item.href.slice(1) ? "text-blue-400" : "text-white hover:text-blue-400"}`}>
+								{item.label}
+							</a>
+						))}
 					</div>
 
-					<button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+					{/* Mobile Menu Button */}
+					<button className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${isScrolled ? "text-gray-600 hover:bg-gray-100" : "text-white hover:bg-white/10"}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
 						{isMenuOpen ? <X /> : <Menu />}
 					</button>
 				</div>
-			</div>
 
-			{isMenuOpen && (
-				<div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg">
-					<div className="px-6 py-4 space-y-4">
-						<MobileNavLink href="#home" onClick={() => setIsMenuOpen(false)}>
-							Home
-						</MobileNavLink>
-						<MobileNavLink href="#projects" onClick={() => setIsMenuOpen(false)}>
-							Projects
-						</MobileNavLink>
-						<MobileNavLink href="#skills" onClick={() => setIsMenuOpen(false)}>
-							Skills
-						</MobileNavLink>
-						<MobileNavLink href="#contact" onClick={() => setIsMenuOpen(false)}>
-							Contact
-						</MobileNavLink>
+				{/* Mobile Navigation */}
+				{isMenuOpen && (
+					<div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg rounded-b-lg">
+						<div className="px-6 py-4 space-y-4">
+							{navItems.map((item) => (
+								<a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className={`block text-base transition-colors duration-300 ${activeSection === item.href.slice(1) ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}>
+									{item.label}
+								</a>
+							))}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</nav>
 	);
 };
